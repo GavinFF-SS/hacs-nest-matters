@@ -92,6 +92,7 @@ class NestMattersClimate(ClimateEntity):
         # but must exist before the first state write during entity registration.
         self._attr_hvac_mode = None
         self._attr_hvac_modes = []
+        self._attr_hvac_action = "idle"
         self._attr_fan_mode = None
         self._attr_fan_modes = []
         self._attr_target_temperature = None
@@ -191,6 +192,14 @@ class NestMattersClimate(ClimateEntity):
             self._hvac_source = "matter (fallback)"
         else:
             self._hvac_source = "unavailable"
+
+        # --- HVAC action: Google only (no Matter equivalent) ---
+        if google_available and google_state.attributes:
+            google_attrs = google_state.attributes
+            self._attr_hvac_action = google_attrs.get("hvac_action")
+        else:
+            # --- Default to idle if Google is unavailable
+            self._attr_hvac_action = "idle"
 
         # --- Fan / humidity: Google only (no Matter equivalent) ---
         if google_available and google_state.attributes:
