@@ -92,7 +92,7 @@ class NestMattersClimate(ClimateEntity):
         # but must exist before the first state write during entity registration.
         self._attr_hvac_mode = None
         self._attr_hvac_modes = []
-        self._attr_hvac_action = "idle"
+        self._attr_hvac_action = None
         self._attr_fan_mode = None
         self._attr_fan_modes = []
         self._attr_target_temperature = None
@@ -104,6 +104,7 @@ class NestMattersClimate(ClimateEntity):
         # Source routing indicators (exposed via extra_state_attributes)
         self._temperature_source: str = "unavailable"
         self._hvac_source: str = "unavailable"
+        self._hvac_action_source: str = "unavailable"
         self._fan_source: str = "unavailable"
 
     async def async_added_to_hass(self) -> None:
@@ -197,9 +198,9 @@ class NestMattersClimate(ClimateEntity):
         if google_available and google_state.attributes:
             google_attrs = google_state.attributes
             self._attr_hvac_action = google_attrs.get("hvac_action")
+            self._hvac_action_source = "google"
         else:
-            # --- Default to idle if Google is unavailable
-            self._attr_hvac_action = "idle"
+            self._hvac_action_source = "unavailable"
 
         # --- Fan / humidity: Google only (no Matter equivalent) ---
         if google_available and google_state.attributes:
