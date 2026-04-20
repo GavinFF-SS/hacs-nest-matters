@@ -200,6 +200,7 @@ class NestMattersClimate(ClimateEntity):
             self._attr_hvac_action = google_attrs.get("hvac_action")
             self._hvac_action_source = "google"
         else:
+            self._attr_hvac_action = None
             self._hvac_action_source = "unavailable"
 
         # --- Fan / humidity: Google only (no Matter equivalent) ---
@@ -226,6 +227,7 @@ class NestMattersClimate(ClimateEntity):
         return {
             "temperature_source": self._temperature_source,
             "hvac_source": self._hvac_source,
+            "hvac_action_source": self._hvac_action_source,
             "fan_source": self._fan_source,
         }
 
