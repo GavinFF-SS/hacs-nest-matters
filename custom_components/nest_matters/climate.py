@@ -200,7 +200,6 @@ class NestMattersClimate(ClimateEntity):
             self._attr_hvac_action = google_attrs.get("hvac_action")
             self._hvac_action_source = "google"
         else:
-            self._attr_hvac_action = None
             self._hvac_action_source = "unavailable"
 
         # --- Fan / humidity: Google only (no Matter equivalent) ---
@@ -213,12 +212,13 @@ class NestMattersClimate(ClimateEntity):
         else:
             self._fan_source = "unavailable"
 
-        # --- Dynamic features: toggle FAN_MODE based on Google availability ---
+        # --- Dynamic features: toggle FAN_MODE or hvac_action based on Google availability ---
         if google_available:
             self._attr_supported_features = (
                 _BASE_FEATURES | ClimateEntityFeature.FAN_MODE
             )
         else:
+            self._attr_hvac_action = None
             self._attr_supported_features = _BASE_FEATURES
 
     @property
